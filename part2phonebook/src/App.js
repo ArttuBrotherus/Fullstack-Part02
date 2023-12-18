@@ -2,9 +2,27 @@ import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
 const Person = (props) => {
+  
+  const DeleteData = (event) => {
+    event.preventDefault()
+    if (window.confirm(`Delete ${props.name} ?`)) {
+      personService.deletePerson(props.luku)
+      .then(response => {
+      personService.
+      getAll()
+      .then(response2 => {
+        props.setPersons(response2.data)
+      })
+    })
+    }
+    }
+
   return(
     <div>
-        {props.name} {props.luku}
+        {props.name} {props.luku}&nbsp;
+        <button onClick={DeleteData}>
+          delete
+        </button>
     </div>
   )
 }
@@ -51,7 +69,7 @@ const App = () => {
   const AllPersons = () => {
     return(
       <>
-        {persons.map(p => <Person phone={p.number} name={p.name} luku={p.id} key={p.id} />)}
+        {persons.map(p => <Person setPersons={setPersons} phone={p.number} name={p.name} luku={p.id} key={p.id} />)}
       </>
     )
   }
