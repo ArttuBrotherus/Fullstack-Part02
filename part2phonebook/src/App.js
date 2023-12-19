@@ -51,10 +51,33 @@ const PhoneForm = (props) => {
   )
 }
 
+const Notification = ({ message }) => {
+  const notifStyle = {
+    color: "green",
+    background: "lightgrey",
+    fontSize: "20px",
+    borderStyle: "solid",
+    borderRadius: "5px",
+    padding: "10px",
+    marginBottom: "10px"
+  }
+
+  if (message === '') {
+    return null
+  }
+
+  return (
+    <div className='error' style={notifStyle}>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [upcomingNo, editNo] = useState('')
+  const [notification, setNotif] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -89,6 +112,11 @@ const App = () => {
           console.log(response)
           setPersons(persons.concat(response.data))
         })
+      setNotif("Added " + newName)
+      setTimeout(() => {
+        setNotif("")
+      }, 3000)
+
       setNewName('')
       editNo('')
     }
@@ -100,11 +128,16 @@ const App = () => {
 
   const updateNo = (event) => {
     editNo(event.target.value)
+    setNotif("Number's been changed!")
+      setTimeout(() => {
+        setNotif("")
+      }, 1000)
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <PhoneForm addDetail={addDetail} newName={newName} handleName={handleName} upcomingNo={upcomingNo} updateNo={updateNo} />
       <h2>Numbers</h2>
       <AllPersons />
